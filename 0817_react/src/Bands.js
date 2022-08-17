@@ -25,11 +25,10 @@ class Bands extends React.Component {
 
     setBandTable(bandsLoad) {
         const initBands = [];
-        console.log(bandsLoad);
         bandsLoad.map((obj) => {
             initBands.push(Object.assign({}, obj));
         })
-        this.state.bands = initBands;
+        this.setState({bands: initBands});
     }
 
     render() {

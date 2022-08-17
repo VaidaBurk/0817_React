@@ -12,16 +12,16 @@ class InputBand extends React.Component {
 
     onSave = (event) => {
         let self = this;
-        const header = new Headers();
-        header.append("Content-type", "application/json");
+        const headers = new Headers();
+        headers.append("Content-type", "application/json");
 
-        fetch("http://localhost/my-app-backend/createBand.php", {
+        fetch("http://localhost:80/my-app-backend/createBand.php", {
             method: "POST",
-            headers: header,
+            headers: headers,
             body: JSON.stringify(self.state)
         }).then(function (response) {
 
-        });
+        })
         event.preventDefault();
     }
 
@@ -39,7 +39,7 @@ class InputBand extends React.Component {
 
     render(){
         return(
-            <form onSubmit={this.onSave()}>
+            <form onSubmit={this.onSave}>
                 <input fieldname="title" value={this.state.title} onChange={this.onTitleChange}></input>
                 <input fieldname="leadArtist" value={this.state.leadArtist} onChange={this.onLeadArtistChange}></input>
                 <input fieldname="genres" value={this.state.genres} onChange={this.onGenresChange}></input>
@@ -49,3 +49,5 @@ class InputBand extends React.Component {
         )
     }
 }
+
+export default InputBand;
