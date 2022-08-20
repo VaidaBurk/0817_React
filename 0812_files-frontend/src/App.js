@@ -5,7 +5,6 @@ import AddBand from './AddBand';
 function App() {
   return (
     <div>
-      <AddBand></AddBand>
       <Bands></Bands>
     </div>
   );
