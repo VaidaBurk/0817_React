@@ -87,7 +87,7 @@ class AddBand extends React.Component {
                             <input className="form-control" fieldname="website" value={this.state.website} onChange={this.onWebsiteChange}></input>
                         </div>
                     </div>
-                    <button className="btn btn-secondary mt-5">Save</button>
+                    <button className="btn btn-secondary mt-3 mb-3">Save</button>
                 </form>
             </div>
         )

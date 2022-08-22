@@ -9,7 +9,7 @@ class Bands extends React.Component {
             initBands: [],
             bands: [],
             updatedBands: [],
-            editable: false
+            editable: false,
         }
         this.bandsInit();
     }
@@ -60,7 +60,7 @@ class Bands extends React.Component {
     onChangeSave = () => {
         const bandsToSave = [];
         for (let i = 0; i < this.state.updatedBands.length; i++) {
-            if (this.state.updatedBands[i] == true) {
+            if (this.state.updatedBands[i] === true) {
                 const bandId = i;
                 const band = this.state.bands.find((band) => {
                     return band.id === bandId;
@@ -83,10 +83,19 @@ class Bands extends React.Component {
             body: JSON.stringify(bandsToSave)
         }).then(function (response) {
             response.json().then((body) => {
+                self.setEditable();
                 alert(body);
-                this.state.editable = false;
+                const bandsInit = this.state.bands;
+                self.setBandTable(bandsInit);
+                self.setState({updatedBands: []});
             })
         })
+    }
+
+    onCancel = () => {
+        const bands = this.state.bandsInit;
+        this.setBandTable(bands);
+        this.setEditable();
     }
 
     render() {
@@ -94,8 +103,9 @@ class Bands extends React.Component {
             <div className='pb-3 px-5 m-5'>
                 <AddBand></AddBand>
                 <form method="POST">
-                    <button className="btn btn-secondary" type="button" onClick={this.setEditable}>Edit</button>
-                    <button className="btn btn-secondary" type="button" onClick={this.onChangeSave}>Save updates</button>
+                    <button className="btn btn-info my-2" type="button" onClick={this.setEditable}>Edit</button>
+                    <button className="btn btn-info m-2" type="button" onClick={this.onChangeSave}>Save updates</button>
+                    <button className="btn btn-info my-2" type="button" onClick={this.onCancel}>Cancel updates</button>
 
                     <table className='table table-hover table-striped table-borderless'>
                         <thead className='table-dark'>
