@@ -1,5 +1,4 @@
 import React from "react";
-import AddBand from "./AddBand";
 
 class Bands extends React.Component {
 
@@ -11,20 +10,11 @@ class Bands extends React.Component {
             updatedBands: [],
             editable: false,
         }
-        this.bandsInit();
+
     }
 
-    bandsInit = () => {
-        let self = this;
-        fetch("http://localhost/08_12_Files/displayAllBands.php", {
-            method: "GET"
-        }).then(function (response) {
-            if (response.ok) {
-                response.json().then(initBands => {
-                    self.setBandTable(initBands);
-                });
-            }
-        });
+    componentDidMount() {
+        this.props.bandsInit(this);
     }
 
     setBandTable(bandsLoad) {
@@ -66,7 +56,6 @@ class Bands extends React.Component {
                     return band.id === bandId;
                 })
                 bandsToSave.push(band);
-                console.log(bandsToSave);
                 this.saveToDB(bandsToSave);
             }
         }
@@ -101,11 +90,10 @@ class Bands extends React.Component {
     render() {
         return (
             <div className='pb-3 px-5 m-5'>
-                <AddBand></AddBand>
                 <form method="POST">
-                    <button className="btn btn-info my-2" type="button" onClick={this.setEditable}>Edit</button>
-                    <button className="btn btn-info m-2" type="button" onClick={this.onChangeSave}>Save updates</button>
-                    <button className="btn btn-info my-2" type="button" onClick={this.onCancel}>Cancel updates</button>
+                    <button className="btn btn-outline-info my-2" type="button" onClick={this.setEditable}>Edit</button>
+                    <button className="btn btn-outline-info m-2" type="button" onClick={this.onChangeSave}>Save updates</button>
+                    <button className="btn btn-outline-danger my-2" type="button" onClick={this.onCancel}>Cancel updates</button>
 
                     <table className='table table-hover table-striped table-borderless'>
                         <thead className='table-dark'>
@@ -125,27 +113,27 @@ class Bands extends React.Component {
                                         <tr key={band.id} onChange={(e) => this.onInputChange(e, band.id)}>
                                             <td>
                                                 <div hidden={this.state.editable}>{band.title}</div>
-                                                <input hidden={!this.state.editable} value={band.title} fieldname="title"></input>
+                                                <input hidden={!this.state.editable} defaultValue={band.title} fieldname="title"></input>
                                             </td>
                                             <td>
                                                 <div hidden={this.state.editable}>{band.leadArtist}</div>
-                                                <input hidden={!this.state.editable} value={band.leadArtist} fieldname="leadArtist"></input>
+                                                <input hidden={!this.state.editable} defaultValue={band.leadArtist} fieldname="leadArtist"></input>
                                             </td>
                                             <td>
                                                 <div hidden={this.state.editable}>{band.genres}</div>
-                                                <input hidden={!this.state.editable} value={band.genres} fieldname="genres"></input>
+                                                <input hidden={!this.state.editable} defaultValue={band.genres} fieldname="genres"></input>
                                             </td>
                                             <td>
                                                 <div hidden={this.state.editable}>{band.yearFoundation}</div>
-                                                <input hidden={!this.state.editable} value={band.yearFoundation} fieldname="yearFoundation"></input>
+                                                <input hidden={!this.state.editable} defaultValue={band.yearFoundation} fieldname="yearFoundation"></input>
                                             </td>
                                             <td>
                                                 <div hidden={this.state.editable}>{band.origin}</div>
-                                                <input hidden={!this.state.editable} value={band.origin} fieldname="origin"></input>
+                                                <input hidden={!this.state.editable} defaultValue={band.origin} fieldname="origin"></input>
                                             </td>
                                             <td>
                                                 <div hidden={this.state.editable}>{band.website}</div>
-                                                <input hidden={!this.state.editable} value={band.website} fieldname="website"></input>
+                                                <input hidden={!this.state.editable} defaultValue={band.website} fieldname="website"></input>
                                             </td>
                                         </tr>
                                     );

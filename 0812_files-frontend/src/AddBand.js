@@ -56,7 +56,7 @@ class AddBand extends React.Component {
 
     render(){
         return(
-            <div className='pb-3'>
+            <div className='pb-3 m-5'>
                 <h5 className='mb-3'>Add new band:</h5>
                 <form onSubmit={this.onSave}>
                     <div className="row">
