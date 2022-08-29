@@ -17,19 +17,6 @@ class LoadPage extends React.Component {
         this.setState({filename: filename, filepath: event.target.value});
     }
 
-    // onFileLoad = () => {
-    //     const headers = new Headers();
-    //     let self = this;
-    //     headers.append("Content-type", "application/json");
-    //     fetch("http://localhost:80/08_12_Files/fileReader.php", {
-    //         method: "POST",
-    //         headers: headers,
-    //         body: JSON.stringify(self.state.filename),
-    //     }).then(function (response) {
-           
-    //     });
-    // }
-
     render() {
         return (
             <div className="m-5">

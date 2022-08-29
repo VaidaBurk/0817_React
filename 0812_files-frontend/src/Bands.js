@@ -5,12 +5,31 @@ class Bands extends React.Component {
     constructor() {
         super();
         this.state = {
-            initBands: [],
             bands: [],
+            bandsInit: [],
             updatedBands: [],
             editable: false,
+            numberOfPages: 0,
+            currentPage: 1,
+            bandsShown: []
         }
 
+    }
+
+    setPageShown = () => {
+        let startPosition = (this.state.currentPage - 1) * 10;
+        let endPosition = startPosition + 10;
+
+        if (endPosition + 1 > this.state.bands.length) {
+            endPosition = this.state.bands.length;
+        }
+        let bandsShown = [];
+        for (let i = startPosition; i < endPosition; i++) {
+            bandsShown.push(this.state.bands[i]);
+        }
+        console.log(this.state.currentPage);
+        console.log(bandsShown);
+        this.setState({ bandsShown: bandsShown });
     }
 
     componentDidMount() {
@@ -22,7 +41,9 @@ class Bands extends React.Component {
         bandsLoad.map((obj) => {
             initBands.push(Object.assign({}, obj));
         })
-        this.setState({ bands: initBands, bandsInit: bandsLoad });
+        const pagesNo = Math.floor(bandsLoad.length / 10);
+        this.setState({ bands: initBands, bandsInit: bandsLoad, numberOfPages: pagesNo });
+        this.setPageShown();
     }
 
     setEditable = () => {
@@ -48,35 +69,45 @@ class Bands extends React.Component {
     }
 
     onChangeSave = () => {
-        const bandsToSave = [];
-        for (let i = 0; i < this.state.updatedBands.length; i++) {
-            if (this.state.updatedBands[i] === true) {
-                const bandId = i;
-                const band = this.state.bands.find((band) => {
-                    return band.id === bandId;
-                })
-                bandsToSave.push(band);
-                this.saveToDB(bandsToSave);
-            }
+        let bandsToSave = [];
+        let link;
+        if (this.props.newBands) {
+            bandsToSave = this.state.bands;
+            link = "http://localhost:80/08_12_files/addBands.php";
         }
+        else {
+            for (let i = 0; i < this.state.updatedBands.length; i++) {
+                if (this.state.updatedBands[i] === true) {
+                    const bandId = i;
+                    const band = this.state.bands.find((band) => {
+                        return band.id === bandId;
+                    })
+                    bandsToSave.push(band);
+                }
+            }
+            link = "http://localhost:80/08_12_files/updateBands.php";
+        }
+        this.updateDB(bandsToSave, link);
     }
 
-    saveToDB = (bandsToSave) => {
+    updateDB = (bandsToSave, link) => {
         let self = this;
         const headers = new Headers();
         headers.append("Content-type", "application/json");
 
-        fetch("http://localhost:80/08_12_files/updateBands.php", {
+        fetch(link, {
             method: "POST",
             headers: headers,
             body: JSON.stringify(bandsToSave)
         }).then(function (response) {
             response.json().then((body) => {
-                self.setEditable();
+                if (self.state.editable) {
+                    self.setEditable()
+                };
                 alert(body);
                 const bandsInit = this.state.bands;
                 self.setBandTable(bandsInit);
-                self.setState({updatedBands: []});
+                self.setState({ updatedBands: [] });
             })
         })
     }
@@ -87,13 +118,52 @@ class Bands extends React.Component {
         this.setEditable();
     }
 
+    switchPageEvent = (event) => {
+        this.switchPage(Number(event.target.innerHTML));
+    }
+
+    switchPage = (pageNo) => {
+        //this.setState({ currentPage: pageNo });
+        this.state.currentPage = pageNo;
+        this.setPageShown();
+    }
+
+    generatePageItems = () => {
+        const pagesArr = [];
+        if (this.state.currentPage > 1) {
+            pagesArr.push(<li className="page-item" key={"Previous"}><button type="button" className="page-link" onClick={this.previousPage}>Previous page</button></li>)
+        }
+        for (let i = 1; i <= this.state.numberOfPages; i++) {
+            pagesArr.push(<li className="page-item"><button type="button" className="page-link" key={i} onClick={this.switchPageEvent}>{i}</button></li>)
+        }
+        if (this.state.currentPage < this.state.numberOfPages) {
+            pagesArr.push(<li className="page-item" key={"Next"}><button type="button" className="page-link" onClick={this.nextPage}>Next page</button></li>)
+        }
+        return pagesArr;
+    }
+
+    nextPage = () => {
+        this.switchPage(++this.state.currentPage);
+    }
+
+    previousPage = () => {
+        this.switchPage(--this.state.currentPage);
+    }
+
     render() {
+
         return (
             <div className='pb-3 px-5 m-5'>
                 <form method="POST">
                     <button className="btn btn-outline-info my-2" type="button" onClick={this.setEditable}>Edit</button>
                     <button className="btn btn-outline-info m-2" type="button" onClick={this.onChangeSave}>Save updates</button>
                     <button className="btn btn-outline-danger my-2" type="button" onClick={this.onCancel}>Cancel updates</button>
+
+                    <nav aria-label="Page navigation example">
+                        <ul className="pagination">
+                            {this.generatePageItems()}
+                        </ul>
+                    </nav>
 
                     <table className='table table-hover table-striped table-borderless'>
                         <thead className='table-dark'>
@@ -108,7 +178,7 @@ class Bands extends React.Component {
                         </thead>
                         <tbody>
                             {
-                                !(this.state.bands === undefined) && this.state.bands.map(band => {
+                                !(this.state.bandsShown === undefined) && this.state.bandsShown.map(band => {
                                     return (
                                         <tr key={band.id} onChange={(e) => this.onInputChange(e, band.id)}>
                                             <td>

@@ -24,7 +24,7 @@ class BandsFromFile extends React.Component {
 
     render() {
         return(
-            <Bands bandsInit={this.bandsInit}></Bands>
+            <Bands bandsInit={this.bandsInit} newBands={true}></Bands>
         )
     }
 

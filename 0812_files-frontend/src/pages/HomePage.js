@@ -1,5 +1,7 @@
 import AddBand from "../AddBand";
 import BandsDB from "../BandsDB";
+import React from "react";
+
 
 function HomePage() {
     return (
