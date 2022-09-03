@@ -11,7 +11,8 @@ class Bands extends React.Component {
             editable: false,
             numberOfPages: 0,
             currentPage: 1,
-            bandsShown: []
+            bandsShown: [],
+            user: JSON.parse(sessionStorage.getItem("user"))
         }
 
     }
@@ -155,9 +156,14 @@ class Bands extends React.Component {
         return (
             <div className='pb-3 px-5 m-5'>
                 <form method="POST">
-                    <button className="btn btn-outline-info my-2" type="button" onClick={this.setEditable}>Edit</button>
-                    <button className="btn btn-outline-info m-2" type="button" onClick={this.onChangeSave}>Save updates</button>
-                    <button className="btn btn-outline-danger my-2" type="button" onClick={this.onCancel}>Cancel updates</button>
+
+                    {this.state.user.roleID === 1 && 
+                    <div>
+                        <button className="btn btn-outline-info my-2" type="button" onClick={this.setEditable}>Edit</button>
+                        <button className="btn btn-outline-info m-2" type="button" onClick={this.onChangeSave}>Save updates</button>
+                        <button className="btn btn-outline-danger my-2" type="button" onClick={this.onCancel}>Cancel updates</button> 
+                    </div>
+                    }
 
                     <nav aria-label="Page navigation example">
                         <ul className="pagination">

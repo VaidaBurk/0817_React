@@ -1,29 +1,39 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
+import logo from './images/Logo.png';
 
 function NavBar() {
+
+    const onLogout = () => {
+        sessionStorage.removeItem("user");
+        window.location.reload();
+    }
     return (
         <>
-            <nav className="navbar navbar-expand-lg bg-dark">
+            <div className="navbar navbar-dark navbar-expand-lg bg-dark">
                 <div className="container-fluid">
-                    <span className="navbar-brand mb-0 h1 text-light">Music Bands</span>
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        <div className="navbar-nav">
-                            <div className="nav-link">
-                                <Link to="/">Home</Link>
-                            </div>
-                            <div className="nav-link">
-                                <Link to="/loadPage">Load Page</Link>
-                            </div>
-                            {/* <a class="nav-link" href="#">Pricing</a>
-                            <a class="nav-link disabled">Disabled</a> */}
+                    <div className="navbar mx-3 my-1">
+                        <a>
+                            <img src={logo} alt="music store" width="80"></img>
+                        </a>
+                        <div className="navbar-nav ms-4">
+                            <ul className="navbar-nav">
+                                <button className="btn btn-outline-light me-2">
+                                    <Link className="nav-link active text-warning" to="/">HOME</Link>
+                                </button>
+                                <button className="btn btn-outline-light">
+                                    <Link className="nav-link active text-warning" to="/loadPage">LOAD PAGE</Link>
+                                </button>
+                            </ul>
                         </div>
                     </div>
+                    <div>
+                        <span className="navbar-text text-light align-middle">User: {JSON.parse(sessionStorage.getItem("user")).username}</span>
+                        <button className="btn btn-outline-warning m-3" onClick={onLogout}>Log Out</button>
+                    </div>
                 </div>
-            </nav>
+            </div>
+
             <Outlet></Outlet>
         </>)
 }
